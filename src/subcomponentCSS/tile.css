@@ -1,0 +1,15 @@
+.Tile{
+    width: 100px;
+    height: 100px;
+    background-color: steelblue;
+    border-radius: 10px;
+    text-align: center;
+    display: table;
+}
+
+.Number{
+    text-align: center;
+    vertical-align: middle;
+    font-size: 3rem;
+    display: table-cell; 
+}
