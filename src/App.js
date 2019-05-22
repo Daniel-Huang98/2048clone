@@ -192,6 +192,15 @@ class App extends Component {
           move--;
         }
       }
+      for(var j = 3; j > 0; j--){
+        if(this.nums[i][j].val === this.nums[i][j-1].val && this.nums[i][j].val !== -1){
+          this.nums[i][j].val = 2*this.nums[i][j].val;
+          this.nums[i][j-1] = {val: -1, merged:0};
+        } else if(this.nums[i][j].val === -1){
+          this.nums[i][j] = this.nums[i][j-1];
+          this.nums[i][j-1] = {val: -1, merged:0};
+        }
+      }
     }
   }
 
