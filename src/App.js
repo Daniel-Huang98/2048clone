@@ -8,18 +8,14 @@ import  Tile from './subcomponents/tile.js';
 class App extends Component {
   constructor(props){
     super(props);
+    
     this.nums = [
-      [-1,-1,-1,-1],
-      [-1,-1,-1,-1],
-      [-1,-1,-1,-1],
-      [-1,-1,-1,-1]
+      [{val: 1, merged: 0},{val: -1, merged: 0},{val: -1, merged: 0},{val: -1, merged: 0}],
+      [{val: -1, merged: 0},{val: -1, merged: 0},{val: -1, merged: 0},{val: -1, merged: 0}],
+      [{val: -1, merged: 0},{val: -1, merged: 0},{val: -1, merged: 0},{val: -1, merged: 0}],
+      [{val: -1, merged: 0},{val: -1, merged: 0},{val: 1, merged: 0},{val: -1, merged: 0}]
     ]
-    this.prev = [
-      [-1,-1,-1,-1],
-      [-1,-1,-1,-1],
-      [-1,-1,-1,-1],
-      [-1,-1,-1,-1]
-    ];
+    this.prev = this.nums;
     this.readKey = this.readKey.bind(this);
     document.onkeydown = this.readKey;
   }
@@ -49,7 +45,7 @@ class App extends Component {
         break;
     }
     if(this.checkFull() === 0){
-      this.randomAdd();
+      //this.randomAdd();
     }
     this.forceUpdate();
   }
@@ -62,8 +58,8 @@ class App extends Component {
    var  list = []
     for(var i = 0; i < 4; i++){
       for(var j = 0; j < 4; j++){
-        if(this.nums[i][j] !== -1){
-          list.push(<Tile number={this.nums[i][j]} x={j+1} y={i+1}/>);
+        if(this.nums[i][j].val !== -1){
+          list.push(<Tile number={this.nums[i][j].val} x={j+1} y={i+1}/>);
         }
       }
     }
@@ -73,7 +69,7 @@ class App extends Component {
   checkFull(){
     for(var i = 0; i < 4; i++){
       for(var j = 0; j < 4; j++){
-        if(this.nums[i][j] === -1){
+        if(this.nums[i][j].val === -1){
           return 0;
         }
       }
@@ -82,13 +78,14 @@ class App extends Component {
   }
 
   randomAdd(){
+    console.log("random added");
     var x = Math.floor(4*Math.random());
     var y = Math.floor(4*Math.random());
-    if(this.nums[y][x] !== -1){
+    if(this.nums[y][x].val !== -1){
       this.randomAdd();
       return;
     }
-    this.nums[y][x] = 2;
+    this.nums[y][x].val = (Math.floor(2*Math.random()) === 1 ? 2:4);
   }
 
   shiftarray(array){
@@ -110,10 +107,10 @@ class App extends Component {
     for(var i = 0; i < 4; i++){
       move = 0;
       for(var j = 0; j < 4; j++){
-        if(this.nums[j][i] !== -1){
-          this.nums[move][i] = this.nums[j][i];
+        if(this.nums[j][i].val !== -1){
+          this.nums[move][i].val = this.nums[j][i].val;
           if(move !== j){
-            this.nums[j][i] = -1;
+            this.nums[j][i].val = -1;
           }
           move++;
         }
@@ -126,10 +123,10 @@ class App extends Component {
     for(var i = 0; i < 4; i++){
       move = 3;
       for(var j = 3; j >= 0; j--){
-        if(this.nums[j][i] !== -1){
-          this.nums[move][i] = this.nums[j][i];
+        if(this.nums[j][i].val !== -1){
+          this.nums[move][i].val = this.nums[j][i].val;
           if(move !== j){
-            this.nums[j][i] = -1;
+            this.nums[j][i].val = -1;
           }
           move--;
         }
@@ -142,10 +139,10 @@ class App extends Component {
     for(var i = 0; i < 4; i++){
       move = 0;
       for(var j = 0; j < 4; j++){
-        if(this.nums[i][j] !== -1){
-          this.nums[i][move] = this.nums[i][j];
+        if(this.nums[i][j].val !== -1){
+          this.nums[i][move].val = this.nums[i][j].val;
           if(move !== j){
-            this.nums[i][j] = -1;
+            this.nums[i][j].val = -1;
           }
           move++;
         }
@@ -158,10 +155,10 @@ class App extends Component {
     for(var i = 0; i < 4; i++){
       move = 3;
       for(var j = 3; j >= 0; j--){
-        if(this.nums[i][j] !== -1){
-          this.nums[i][move] = this.nums[i][j];
+        if(this.nums[i][j].val !== -1){
+          this.nums[i][move].val = this.nums[i][j].val;
           if(move !== j){
-            this.nums[i][j] = -1;
+            this.nums[i][j].val = -1;
           }
           move--;
         }
