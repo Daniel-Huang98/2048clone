@@ -8,23 +8,22 @@ import  Tile from './subcomponents/tile.js';
 class App extends Component {
   constructor(props){
     super(props);
-    
     this.nums = [
-      [{val: 1, merged: 0},{val: -1, merged: 0},{val: -1, merged: 0},{val: -1, merged: 0}],
+      [{val: 4, merged: 0},{val: -1, merged: 0},{val: -1, merged: 0},{val: -1, merged: 0}],
       [{val: -1, merged: 0},{val: -1, merged: 0},{val: -1, merged: 0},{val: -1, merged: 0}],
       [{val: -1, merged: 0},{val: -1, merged: 0},{val: -1, merged: 0},{val: -1, merged: 0}],
-      [{val: -1, merged: 0},{val: -1, merged: 0},{val: 1, merged: 0},{val: -1, merged: 0}]
+      [{val: -1, merged: 0},{val: -1, merged: 0},{val: 4, merged: 0},{val: -1, merged: 0}]
     ]
-    this.prev = this.nums;
+    this.prev = JSON.stringify(this.nums);
     this.readKey = this.readKey.bind(this);
+    this.revertBoard = this.revertBoard.bind(this);
     document.onkeydown = this.readKey;
   }
 
   readKey(e){
-    this.prev = this.nums;
     e = e || window.event;
-    e.preventDefault();
-    switch(e.keyCode){
+    var code = e.keyCode;
+    switch(code){
       case 38:
         this.shiftUp();
         console.log("up");
@@ -44,14 +43,27 @@ class App extends Component {
       default:
         break;
     }
-    if(this.checkFull() === 0){
-      //this.randomAdd();
+    if(code === 38 || code === 40 || code === 37 || code === 39){
+      e.preventDefault();
+      if(this.checkFull() === 0 && this.prev !== JSON.stringify(this.nums)){
+        this.randomAdd();
+      }
+      this.forceUpdate();
+      this.prev = JSON.stringify(this.nums);
     }
-    this.forceUpdate();
+    
+    
   }
 
   revertBoard(){
-    this.nums = this.prev;
+    console.log("revert");
+    this.nums = [
+      [{val: 4, merged: 0},{val: -1, merged: 0},{val: -1, merged: 0},{val: -1, merged: 0}],
+      [{val: -1, merged: 0},{val: -1, merged: 0},{val: -1, merged: 0},{val: -1, merged: 0}],
+      [{val: -1, merged: 0},{val: -1, merged: 0},{val: -1, merged: 0},{val: -1, merged: 0}],
+      [{val: -1, merged: 0},{val: -1, merged: 0},{val: 4, merged: 0},{val: -1, merged: 0}]
+    ]
+    this.forceUpdate();
   }
 
   populateBoard(){
@@ -77,6 +89,14 @@ class App extends Component {
     return 1;
   }
 
+  resertMerge(){
+    for(var i = 0; i < 4; i++){
+      for(var j = 0; j < 4; j++){
+        this.nums[i][j].merged = 0;
+      }
+    }
+  }
+
   randomAdd(){
     console.log("random added");
     var x = Math.floor(4*Math.random());
@@ -86,20 +106,6 @@ class App extends Component {
       return;
     }
     this.nums[y][x].val = (Math.floor(2*Math.random()) === 1 ? 2:4);
-  }
-
-  shiftarray(array){
-    var move = 0;
-    for(var i = 0; i < 4; i++){
-      if(array[i] !== -1){
-        array[move] = array[i];
-        if(i !== move){
-          array[i] = -1;
-        }
-        move++;
-      }
-    }
-    return array;
   }
 
   shiftUp(){
@@ -173,7 +179,7 @@ class App extends Component {
         <div id="grid">
           {list}
         </div>
-        <p id="revert" onClick={this.revertBoard}></p>
+        <p id="revert" onClick={this.revertBoard}>Reset</p>
       </div>
     );
   }
