@@ -53,12 +53,9 @@ class App extends Component {
       this.forceUpdate();
       this.prev = JSON.stringify(this.nums);
     }
-    
-    
   }
 
   revertBoard(){
-    //console.log("revert");
     this.nums = [
       [{val: 4, merged: 0},{val: 4, merged: 0},{val: 8, merged: 0},{val: 16 , merged: 0}],
       [{val: -1, merged: 0},{val: -1, merged: 0},{val: -1, merged: 0},{val: -1, merged: 0}],
@@ -135,6 +132,15 @@ class App extends Component {
           move++;
         }
       }
+      for(var j = 0; j < 3; j++){
+        if(this.nums[j][i].val === this.nums[j+1][i].val && this.nums[j][i].val !== -1){
+          this.nums[j][i].val = 2*this.nums[j][i].val;
+          this.nums[j+1][i] = {val: -1, merged:0};
+        } else if(this.nums[j][i].val === -1){
+          this.nums[j][i] = this.nums[j+1][i];
+          this.nums[j+1][i] = {val: -1, merged:0};
+        }
+      }
     }
   }
 
@@ -149,6 +155,15 @@ class App extends Component {
             this.nums[j][i] = {val: -1, merged:0};
           }
           move--;
+        }
+      }
+      for(var j = 3; j > 0; j--){
+        if(this.nums[j][i].val === this.nums[j-1][i].val && this.nums[j][i].val !== -1){
+          this.nums[j][i].val = 2*this.nums[j][i].val;
+          this.nums[j-1][i] = {val: -1, merged:0};
+        } else if(this.nums[j][i].val === -1){
+          this.nums[j][i] = this.nums[j-1][i];  
+          this.nums[j-1][i] = {val: -1, merged:0};
         }
       }
     }
