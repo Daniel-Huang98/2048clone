@@ -115,14 +115,7 @@ class App extends Component {
           if(move !== j){
             this.nums[j][i] = -1;
           }
-          if(move !== 0){
-            if(this.nums[move-1][i] === this.nums[move][i]){
-              this.nums[move-1][i] = 2*this.nums[move-1][i];
-              this.nums[move][i] = -1;
-            }
-          } else {
-            move++;
-          }
+          move++;
         }
       }
     }
@@ -138,14 +131,7 @@ class App extends Component {
           if(move !== j){
             this.nums[j][i] = -1;
           }
-          if(move !== 3){
-            if(this.nums[move+1][i] === this.nums[move][i]){
-              this.nums[move+1][i] = 2*this.nums[move+1][i];
-              this.nums[move][i] = -1;
-            }
-          } else{
-            move--;
-          }
+          move--;
         }
       }
     }
@@ -161,14 +147,7 @@ class App extends Component {
           if(move !== j){
             this.nums[i][j] = -1;
           }
-          if(move !== 0){
-            if(this.nums[i][move-1] === this.nums[i][move]){
-              this.nums[i][move-1] = 2*this.nums[i][move-1];
-              this.nums[i][move] = -1;
-            }
-          } else{
-            move++;
-          }
+          move++;
         }
       }
     }
@@ -184,16 +163,7 @@ class App extends Component {
           if(move !== j){
             this.nums[i][j] = -1;
           }
-          if(move !== 3){
-            if(this.nums[i][move+1] === this.nums[i][move]){
-              this.nums[i][move+1] = 2*this.nums[i][move+1];
-              this.nums[i][move] = -1;
-            }
-          } else{
-            move--;
-          }
-          
-         
+          move--;
         }
       }
     }
@@ -206,7 +176,7 @@ class App extends Component {
         <div id="grid">
           {list}
         </div>
-        <p id="revert" onClick=>revert</p>
+        <p id="revert" onClick={this.revertBoard}></p>
       </div>
     );
   }
