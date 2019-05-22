@@ -15,6 +15,7 @@ class App extends Component {
       [{val: -1, merged: 0},{val: -1, merged: 0},{val: 4, merged: 0},{val: -1, merged: 0}]
     ]
     this.prev = JSON.stringify(this.nums);
+    this.score = this.Calcscore();
     this.readKey = this.readKey.bind(this);
     this.revertBoard = this.revertBoard.bind(this);
     document.onkeydown = this.readKey;
@@ -48,6 +49,7 @@ class App extends Component {
       if(this.checkFull() === 0 && this.prev !== JSON.stringify(this.nums)){
         this.randomAdd();
       }
+      this.score = this.Calcscore();
       this.forceUpdate();
       this.prev = JSON.stringify(this.nums);
     }
@@ -95,6 +97,17 @@ class App extends Component {
         this.nums[i][j].merged = 0;
       }
     }
+  }
+
+  Calcscore(){
+    var score = 0;
+    for(var i = 0; i < 4; i++){
+      for(var j = 0; j < 4; j++){
+        if(this.nums[i][j].val != -1)
+        score += this.nums[i][j].val;
+      }
+    }
+    return score;
   }
 
   randomAdd(){
@@ -180,6 +193,7 @@ class App extends Component {
           {list}
         </div>
         <p id="revert" onClick={this.revertBoard}>Reset</p>
+        <p id="scoreboard">score: {this.score}</p>
       </div>
     );
   }
