@@ -9,7 +9,7 @@ class App extends Component {
   constructor(props){
     super(props);
     this.nums = [
-      [{val: 4, merged: 0},{val: -1, merged: 0},{val: -1, merged: 0},{val: -1, merged: 0}],
+      [{val: 4, merged: 0},{val: -1, merged: 0},{val: -1, merged: 0},{val: 4, merged: 0}],
       [{val: -1, merged: 0},{val: -1, merged: 0},{val: -1, merged: 0},{val: -1, merged: 0}],
       [{val: -1, merged: 0},{val: -1, merged: 0},{val: -1, merged: 0},{val: -1, merged: 0}],
       [{val: -1, merged: 0},{val: -1, merged: 0},{val: 4, merged: 0},{val: -1, merged: 0}]
@@ -58,9 +58,9 @@ class App extends Component {
   }
 
   revertBoard(){
-    console.log("revert");
+    //console.log("revert");
     this.nums = [
-      [{val: 4, merged: 0},{val: -1, merged: 0},{val: -1, merged: 0},{val: -1, merged: 0}],
+      [{val: 4, merged: 0},{val: 4, merged: 0},{val: 8, merged: 0},{val: 16 , merged: 0}],
       [{val: -1, merged: 0},{val: -1, merged: 0},{val: -1, merged: 0},{val: -1, merged: 0}],
       [{val: -1, merged: 0},{val: -1, merged: 0},{val: -1, merged: 0},{val: -1, merged: 0}],
       [{val: -1, merged: 0},{val: -1, merged: 0},{val: 4, merged: 0},{val: -1, merged: 0}]
@@ -103,7 +103,7 @@ class App extends Component {
     var score = 0;
     for(var i = 0; i < 4; i++){
       for(var j = 0; j < 4; j++){
-        if(this.nums[i][j].val != -1)
+        if(this.nums[i][j].val !== -1)
         score += this.nums[i][j].val;
       }
     }
@@ -111,7 +111,7 @@ class App extends Component {
   }
 
   randomAdd(){
-    console.log("random added");
+    //console.log("random added");
     var x = Math.floor(4*Math.random());
     var y = Math.floor(4*Math.random());
     if(this.nums[y][x].val !== -1){
@@ -119,6 +119,7 @@ class App extends Component {
       return;
     }
     this.nums[y][x].val = (Math.floor(2*Math.random()) === 1 ? 2:4);
+    this.nums[y][x].merged = 0;
   }
 
   shiftUp(){
@@ -127,9 +128,9 @@ class App extends Component {
       move = 0;
       for(var j = 0; j < 4; j++){
         if(this.nums[j][i].val !== -1){
-          this.nums[move][i].val = this.nums[j][i].val;
+          this.nums[move][i] = this.nums[j][i];
           if(move !== j){
-            this.nums[j][i].val = -1;
+            this.nums[j][i]= {val: -1, merged:0};
           }
           move++;
         }
@@ -143,9 +144,9 @@ class App extends Component {
       move = 3;
       for(var j = 3; j >= 0; j--){
         if(this.nums[j][i].val !== -1){
-          this.nums[move][i].val = this.nums[j][i].val;
+          this.nums[move][i] = this.nums[j][i];
           if(move !== j){
-            this.nums[j][i].val = -1;
+            this.nums[j][i] = {val: -1, merged:0};
           }
           move--;
         }
@@ -159,11 +160,20 @@ class App extends Component {
       move = 0;
       for(var j = 0; j < 4; j++){
         if(this.nums[i][j].val !== -1){
-          this.nums[i][move].val = this.nums[i][j].val;
+          this.nums[i][move] = this.nums[i][j];
           if(move !== j){
-            this.nums[i][j].val = -1;
+            this.nums[i][j] = {val: -1, merged:0};
           }
           move++;
+        }
+      }
+      for(var j = 0; j < 3; j++){
+        if(this.nums[i][j].val === this.nums[i][j+1].val && this.nums[i][j].val !== -1){
+          this.nums[i][j].val = 2*this.nums[i][j].val;
+          this.nums[i][j+1] = {val: -1, merged:0};
+        } else if(this.nums[i][j].val === -1){
+          this.nums[i][j] = this.nums[i][j+1];
+          this.nums[i][j+1] = {val: -1, merged:0};
         }
       }
     }
@@ -175,9 +185,9 @@ class App extends Component {
       move = 3;
       for(var j = 3; j >= 0; j--){
         if(this.nums[i][j].val !== -1){
-          this.nums[i][move].val = this.nums[i][j].val;
+          this.nums[i][move] = this.nums[i][j];
           if(move !== j){
-            this.nums[i][j].val = -1;
+            this.nums[i][j] = {val: -1, merged:0};
           }
           move--;
         }
