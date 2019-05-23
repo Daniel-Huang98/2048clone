@@ -37,3 +37,25 @@
   line-height: 50px;
   padding-left: 20px;
 }
+
+#highscore{
+  height:50px;
+  width: 200px;
+  border-radius: 10px;
+  font-size: 1.5rem;
+  background-color: aqua;
+  text-align: left;
+  line-height: 50px;
+  padding-left: 20px;
+}
+
+#result{
+  height:50px;
+  width: 200px;
+  border-radius: 10px;
+  font-size: 1.5rem;
+  background-color: aqua;
+  text-align: left;
+  line-height: 50px;
+  padding-left: 20px;
+}

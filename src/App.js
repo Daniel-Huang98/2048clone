@@ -9,15 +9,19 @@ class App extends Component {
   constructor(props){
     super(props);
     this.nums = [
-      [{val: 4, merged: 0},{val: -1, merged: 0},{val: -1, merged: 0},{val: 4, merged: 0}],
       [{val: -1, merged: 0},{val: -1, merged: 0},{val: -1, merged: 0},{val: -1, merged: 0}],
       [{val: -1, merged: 0},{val: -1, merged: 0},{val: -1, merged: 0},{val: -1, merged: 0}],
-      [{val: -1, merged: 0},{val: -1, merged: 0},{val: 4, merged: 0},{val: -1, merged: 0}]
+      [{val: -1, merged: 0},{val: -1, merged: 0},{val: -1, merged: 0},{val: -1, merged: 0}],
+      [{val: -1, merged: 0},{val: -1, merged: 0},{val: -1, merged: 0},{val: -1, merged: 0}]
     ]
+    this.randomAdd();
+    this.randomAdd();
     this.prev = JSON.stringify(this.nums);
     this.score = this.Calcscore();
     this.readKey = this.readKey.bind(this);
     this.revertBoard = this.revertBoard.bind(this);
+    this.highestScore = 0;
+    this.loss = 0;
     document.onkeydown = this.readKey;
   }
 
@@ -50,6 +54,9 @@ class App extends Component {
         this.randomAdd();
       }
       this.score = this.Calcscore();
+      if(this.score >= this.highestScore){
+        this.highestScore = this.score;
+      }
       this.forceUpdate();
       this.prev = JSON.stringify(this.nums);
     }
@@ -57,12 +64,50 @@ class App extends Component {
 
   revertBoard(){
     this.nums = [
-      [{val: 4, merged: 0},{val: 4, merged: 0},{val: 8, merged: 0},{val: 16 , merged: 0}],
       [{val: -1, merged: 0},{val: -1, merged: 0},{val: -1, merged: 0},{val: -1, merged: 0}],
       [{val: -1, merged: 0},{val: -1, merged: 0},{val: -1, merged: 0},{val: -1, merged: 0}],
-      [{val: -1, merged: 0},{val: -1, merged: 0},{val: 4, merged: 0},{val: -1, merged: 0}]
+      [{val: -1, merged: 0},{val: -1, merged: 0},{val: -1, merged: 0},{val: -1, merged: 0}],
+      [{val: -1, merged: 0},{val: -1, merged: 0},{val: -1, merged: 0},{val: -1, merged: 0}]
     ]
+    this.randomAdd();
+    this.randomAdd();
     this.forceUpdate();
+  }
+
+  checkLoss(){
+    for(var i = 0; i < 4; i++){
+      for(var j = 0; j < 4; j++){
+        if(i === 0){
+          if(this.nums[i][j].val === this.nums[i+1][j].val) {this.loss = 0; return;}
+        } else if(i === 3){
+          if(this.nums[i][j].val === this.nums[i-1][j].val) {this.loss = 0; return;}
+        } else{
+          if(this.nums[i][j].val === this.nums[i-1][j].val) {this.loss = 0; return;}
+          if(this.nums[i][j].val === this.nums[i+1][j].val) {this.loss = 0; return;}
+        }
+
+        if(j === 0){
+          if(this.nums[i][j].val === this.nums[i][j+1].val) {this.loss = 0; return;}
+        } else if(j === 3){
+          if(this.nums[i][j].val === this.nums[i][j-1].val) {this.loss = 0; return;}
+        } else {
+          if(this.nums[i][j].val === this.nums[i][j-1].val) {this.loss = 0; return;}
+          if(this.nums[i][j].val === this.nums[i][j+1].val) {this.loss = 0; return;}
+        }
+      }
+    }
+    this.loss = 1;
+  }
+
+  checkWin(){
+    for(var i = 0; i < 4; i++){
+      for(var j = 0; j < 4; j++){
+        if(this.nums[i][j].val === 2048){
+          this.loss = 2;
+        }
+      }
+    }
+    return 0;
   }
 
   populateBoard(){
@@ -108,7 +153,6 @@ class App extends Component {
   }
 
   randomAdd(){
-    //console.log("random added");
     var x = Math.floor(4*Math.random());
     var y = Math.floor(4*Math.random());
     if(this.nums[y][x].val !== -1){
@@ -221,13 +265,31 @@ class App extends Component {
 
   render() {   
     var list = this.populateBoard();
+    var result = "";
+    this.checkWin();
+    if(this.loss !== 2){
+      this.checkLoss();
+    }
+    switch(this.loss){
+      case 0: 
+        result = ""
+        break;
+      case 1:
+        result = "YOU LOSE";
+        break;
+      case 2:
+        result = "YOU WIN";
+        break;
+    }
     return (
       <div className="App" onKeyDown={this.readKey}>
         <div id="grid">
           {list}
         </div>
         <p id="revert" onClick={this.revertBoard}>Reset</p>
-        <p id="scoreboard">score: {this.score}</p>
+        <p id="scoreboard">score: {this.Calcscore()}</p>
+        <p id="highscore">highscore: {this.highestScore}</p>
+        <p id="result">{result}</p>
       </div>
     );
   }
