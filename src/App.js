@@ -75,6 +75,7 @@ class App extends Component {
   }
 
   checkLoss(){
+    if(!this.checkFull()) {this.loss = 0; return}
     for(var i = 0; i < 4; i++){
       for(var j = 0; j < 4; j++){
         if(i === 0){
@@ -283,13 +284,23 @@ class App extends Component {
     }
     return (
       <div className="App" onKeyDown={this.readKey}>
-        <div id="grid">
-          {list}
+        <header id="heading">2048</header>
+       <div id="Content">
+          <div id="grid">
+            {list}
+          </div>
+          <div>
+            <p id="revert" onClick={this.revertBoard}>Reset</p>
+            <p id="scoreboard">score: {this.Calcscore()}</p>
+            <p id="highscore">highscore: {this.highestScore}</p>
+            <p id="result">{result}</p>
+          </div>
         </div>
-        <p id="revert" onClick={this.revertBoard}>Reset</p>
-        <p id="scoreboard">score: {this.Calcscore()}</p>
-        <p id="highscore">highscore: {this.highestScore}</p>
-        <p id="result">{result}</p>
+        <footer id="footing">
+          <p>Made by Daniel Huang 2019</p>
+          <p>source code can be found at <a href="url"> https://github.com/Daniel-Huang98/2048clone</a></p>
+          
+        </footer>
       </div>
     );
   }
