@@ -48,6 +48,7 @@
   text-align: center;
   vertical-align: text-bottom;
   line-height: 50px;
+  cursor: pointer;
 }
 
 #scoreboard{
