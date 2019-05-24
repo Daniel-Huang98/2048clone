@@ -298,7 +298,7 @@ class App extends Component {
         </div>
         <footer id="footing">
           <p>Made by Daniel Huang 2019</p>
-          <p>source code can be found at <a href="url"> https://github.com/Daniel-Huang98/2048clone</a></p>
+          <p>source code can be found at <a target="_blank" href="https://github.com/Daniel-Huang98/2048clone"> https://github.com/Daniel-Huang98/2048clone</a></p>
           
         </footer>
       </div>
