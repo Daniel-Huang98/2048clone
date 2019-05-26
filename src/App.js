@@ -9,10 +9,10 @@ class App extends Component {
   constructor(props){
     super(props);
     this.nums = [
-      [{val: -1, merged: 0},{val: -1, merged: 0},{val: -1, merged: 0},{val: -1, merged: 0}],
-      [{val: -1, merged: 0},{val: -1, merged: 0},{val: -1, merged: 0},{val: -1, merged: 0}],
-      [{val: -1, merged: 0},{val: -1, merged: 0},{val: -1, merged: 0},{val: -1, merged: 0}],
-      [{val: -1, merged: 0},{val: -1, merged: 0},{val: -1, merged: 0},{val: -1, merged: 0}]
+      [{val: 8, merged: 0},{val: 8, merged: 0},{val: 8, merged: 0},{val: 8, merged: 0}],
+      [{val: -1, merged: 0},{val: -1, merged: 0},{val: 8, merged: 0},{val: 8, merged: 0}],
+      [{val: -1, merged: 0},{val: -1, merged: 0},{val: 8, merged: 0},{val: 8, merged: 0}],
+      [{val: -1, merged: 0},{val: -1, merged: 0},{val: 8, merged: 0},{val: 16, merged: 0}]
     ]
     this.randomAdd();
     this.randomAdd();
@@ -164,77 +164,136 @@ class App extends Component {
     this.nums[y][x].merged = 0;
   }
 
+  moveColumnUp(column){
+    var move = 0;
+    var i = column;
+    for(var j = 0; j < 4; j++){
+      if(this.nums[j][i].val !== -1){
+        this.nums[move][i] = this.nums[j][i];
+        if(move !== j){
+          this.nums[j][i]= {val: -1, merged:0};
+        }
+        move++;
+      }
+    }
+  }
+
+  mergeColumnUp(column){
+    var i = column;
+    for(var j = 1; j <= 3; j++){
+      if(this.nums[j][i].val === this.nums[j-1][i].val && this.nums[j][i].val !== -1){
+        this.nums[j][i].val = 2*this.nums[j][i].val;
+        this.nums[j-1][i] = {val: -1, merged:0};
+      } else if(this.nums[j][i].val === -1){
+        this.nums[j][i] = this.nums[j-1][i];
+        this.nums[j-1][i] = {val: -1, merged:0};
+      }
+    }
+  }
+
   shiftUp(){
     var move;
     for(var i = 0; i < 4; i++){
-      move = 0;
-      for(var j = 0; j < 4; j++){
-        if(this.nums[j][i].val !== -1){
-          this.nums[move][i] = this.nums[j][i];
-          if(move !== j){
-            this.nums[j][i]= {val: -1, merged:0};
-          }
-          move++;
+      this.moveColumnUp(i);
+      this.mergeColumnUp(i);
+      this.moveColumnUp(i);
+      
+    }
+  }
+
+  moveColumnDown(column){
+    var i = column;
+    var move = 3;
+    for(var j = 3; j >= 0; j--){ //shift everything to be next to each other 
+      if(this.nums[j][i].val !== -1){
+        this.nums[move][i] = this.nums[j][i];
+        if(move !== j){
+          this.nums[j][i] = {val: -1, merged:0};
         }
+        move--;
       }
-      for(var j = 0; j < 3; j++){
-        if(this.nums[j][i].val === this.nums[j+1][i].val && this.nums[j][i].val !== -1){
-          this.nums[j][i].val = 2*this.nums[j][i].val;
-          this.nums[j+1][i] = {val: -1, merged:0};
-        } else if(this.nums[j][i].val === -1){
-          this.nums[j][i] = this.nums[j+1][i];
-          this.nums[j+1][i] = {val: -1, merged:0};
-        }
+    }
+  } 
+
+  mergeColumnDown(column){
+    var i = column;
+    for(var j = 2; j >= 0; j--){ //merge pairs together
+      if(this.nums[j][i].val === this.nums[j+1][i].val && this.nums[j][i].val !== -1){
+        this.nums[j][i].val = 2*this.nums[j][i].val;
+        this.nums[j+1][i] = {val: -1, merged:0};
+      } else if(this.nums[j][i].val === -1){
+        this.nums[j][i] = this.nums[j+1][i];
+        this.nums[j+1][i] = {val: -1, merged:0};
       }
     }
   }
 
   shiftDown(){
-    var move;
-    for(var i = 0; i < 4; i++){
-      move = 3;
-      for(var j = 3; j >= 0; j--){
-        if(this.nums[j][i].val !== -1){
-          this.nums[move][i] = this.nums[j][i];
-          if(move !== j){
-            this.nums[j][i] = {val: -1, merged:0};
-          }
-          move--;
+    for(var i = 0; i < 4; i++){ 
+      this.moveColumnDown(i);
+      this.mergeColumnDown(i);
+      this.moveColumnDown(i);
+    }
+  }
+
+  moveRowLeft(row){
+    var i = row;
+    var move = 0;
+    for(var j = 0; j < 4; j++){
+      if(this.nums[i][j].val !== -1){
+        this.nums[i][move] = this.nums[i][j];
+        if(move !== j){
+          this.nums[i][j] = {val: -1, merged:0};
         }
+        move++;
       }
-      for(var j = 3; j > 0; j--){
-        if(this.nums[j][i].val === this.nums[j-1][i].val && this.nums[j][i].val !== -1){
-          this.nums[j][i].val = 2*this.nums[j][i].val;
-          this.nums[j-1][i] = {val: -1, merged:0};
-        } else if(this.nums[j][i].val === -1){
-          this.nums[j][i] = this.nums[j-1][i];  
-          this.nums[j-1][i] = {val: -1, merged:0};
-        }
+    }
+  }
+
+  mergeRowLeft(row){
+    var i = row;
+    for(var j = 1; j <= 3; j++){
+      if(this.nums[i][j].val === this.nums[i][j-1].val && this.nums[i][j].val !== -1){
+        this.nums[i][j].val = 2*this.nums[i][j].val;
+        this.nums[i][j-1] = {val: -1, merged:0};
+      } else if(this.nums[i][j].val === -1){
+        this.nums[i][j] = this.nums[i][j-1];
+        this.nums[i][j-1] = {val: -1, merged:0};
       }
     }
   }
 
   shiftLeft(){
-    var move;
     for(var i = 0; i < 4; i++){
-      move = 0;
-      for(var j = 0; j < 4; j++){
+      this.moveRowLeft(i);
+      this.mergeRowLeft(i);
+      this.moveRowLeft(i);
+    }
+  }
+
+  moveRowRight(row){
+    var i = row;
+    var move = 3;
+      for(var j = 3; j >= 0; j--){
         if(this.nums[i][j].val !== -1){
           this.nums[i][move] = this.nums[i][j];
           if(move !== j){
             this.nums[i][j] = {val: -1, merged:0};
           }
-          move++;
+          move--;
         }
       }
-      for(var j = 0; j < 3; j++){
-        if(this.nums[i][j].val === this.nums[i][j+1].val && this.nums[i][j].val !== -1){
-          this.nums[i][j].val = 2*this.nums[i][j].val;
-          this.nums[i][j+1] = {val: -1, merged:0};
-        } else if(this.nums[i][j].val === -1){
-          this.nums[i][j] = this.nums[i][j+1];
-          this.nums[i][j+1] = {val: -1, merged:0};
-        }
+  }
+
+  mergeRowRight(row){
+    var i = row;
+    for(var j = 2; j >= 0; j--){
+      if(this.nums[i][j].val === this.nums[i][j+1].val && this.nums[i][j].val !== -1){
+        this.nums[i][j].val = 2*this.nums[i][j].val;
+        this.nums[i][j+1] = {val: -1, merged:0};
+      } else if(this.nums[i][j].val === -1){
+        this.nums[i][j] = this.nums[i][j+1];
+        this.nums[i][j+1] = {val: -1, merged:0};
       }
     }
   }
@@ -242,25 +301,10 @@ class App extends Component {
   shiftRight(){
     var move;
     for(var i = 0; i < 4; i++){
-      move = 3;
-      for(var j = 3; j >= 0; j--){
-        if(this.nums[i][j].val !== -1){
-          this.nums[i][move] = this.nums[i][j];
-          if(move !== j){
-            this.nums[i][j] = {val: -1, merged:0};
-          }
-          move--;
-        }
-      }
-      for(var j = 3; j > 0; j--){
-        if(this.nums[i][j].val === this.nums[i][j-1].val && this.nums[i][j].val !== -1){
-          this.nums[i][j].val = 2*this.nums[i][j].val;
-          this.nums[i][j-1] = {val: -1, merged:0};
-        } else if(this.nums[i][j].val === -1){
-          this.nums[i][j] = this.nums[i][j-1];
-          this.nums[i][j-1] = {val: -1, merged:0};
-        }
-      }
+      this.moveRowRight(i);
+      this.mergeRowRight(i);
+      this.moveRowRight(i);
+      
     }
   }
 
