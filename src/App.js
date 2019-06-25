@@ -9,10 +9,10 @@ class App extends Component {
   constructor(props){
     super(props);
     this.nums = [
-      [{val: 8, merged: 0},{val: 8, merged: 0},{val: 8, merged: 0},{val: 8, merged: 0}],
-      [{val: -1, merged: 0},{val: -1, merged: 0},{val: 8, merged: 0},{val: 8, merged: 0}],
-      [{val: -1, merged: 0},{val: -1, merged: 0},{val: 8, merged: 0},{val: 8, merged: 0}],
-      [{val: -1, merged: 0},{val: -1, merged: 0},{val: 8, merged: 0},{val: 16, merged: 0}]
+      [{val: -1, merged: 0},{val: -1, merged: 0},{val: -1, merged: 0},{val: -1, merged: 0}],
+      [{val: -1, merged: 0},{val: -1, merged: 0},{val: -1, merged: 0},{val: -1, merged: 0}],
+      [{val: -1, merged: 0},{val: -1, merged: 0},{val: -1, merged: 0},{val: -1, merged: 0}],
+      [{val: -1, merged: 0},{val: -1, merged: 0},{val: -1, merged: 0},{val: -1, merged: 0}]
     ]
     this.randomAdd();
     this.randomAdd();
